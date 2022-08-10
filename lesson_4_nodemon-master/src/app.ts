@@ -5,21 +5,53 @@ import { createConnection, getManager } from 'typeorm';
 import { User } from './entity/user';
 
 const app = express();
-app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.get(
     '/users',
     async (req: Request, res: Response) => {
         const users = await getManager().getRepository(User).find();
         res.json(users);
+
+        // const user = await getManager().getRepository(User).findOne({
+        //     where: {
+        //         firstName: 'Kokos',
+        //     },
+        // });
+        // res.json(user);
+
+        //   SQL запит
+        // const users = await getManager().getRepository(User)
+        //     .createQueryBuilder('user')
+        //     .where('user.firstName = "Kokos"')
+        //     .getOne();
+        // res.json(users);
     },
 );
 
-app.post('/users', async (req: Request, res: Response) => {
-    console.log(req.body);
-    // const createdUser = await getManager().getRepository(User).save(req.body);
-    // res.json(createdUser);
+app.post('/users', async (req, res) => {
+    const createdUser = await getManager().getRepository(User).save(req.body);
+    res.json(createdUser);
+});
+
+app.patch('/users/:id', async (req, res) => {
+    const { password, email } = req.body;
+    const updatedUser = await getManager()
+        .getRepository(User)
+        .update({ id: Number(req.params.id) }, {
+            password,
+            email,
+        });
+    res.json(updatedUser);
+});
+
+app.delete('/users/:id', async (req, res) => {
+    const deletedUser = await getManager()
+        .getRepository(User)
+        .delete({ id: Number(req.params.id) });
+    res.json(deletedUser);
 });
 
 app.listen(5500, async () => {
