@@ -12,8 +12,8 @@ app.use(express.json());
 app.get(
     '/users',
     async (req: Request, res: Response) => {
-        const users = await getManager().getRepository(User).find();
-        res.json(users);
+        // const users = await getManager().getRepository(User).find({ relations: ['posts'] });
+        // res.json(users);
 
         // const user = await getManager().getRepository(User).findOne({
         //     where: {
@@ -28,6 +28,14 @@ app.get(
         //     .where('user.firstName = "Kokos"')
         //     .getOne();
         // res.json(users);
+
+        // Інший запит: тільки ті юзерси, які в своїх постах мають такі значення: "..."
+        const users = await getManager().getRepository(User)
+            .createQueryBuilder('user')
+            .leftJoin('Posts', 'posts', 'posts.userId = user.id')
+            .where('posts.text = "Possssst"')
+            .getMany();
+        res.json(users);
     },
 );
 
@@ -47,10 +55,17 @@ app.patch('/users/:id', async (req, res) => {
     res.json(updatedUser);
 });
 
+// app.delete('/users/:id', async (req, res) => {
+//     const deletedUser = await getManager()
+//         .getRepository(User)
+//         .delete({ id: Number(req.params.id) });
+//     res.json(deletedUser);
+// });
+
 app.delete('/users/:id', async (req, res) => {
     const deletedUser = await getManager()
         .getRepository(User)
-        .delete({ id: Number(req.params.id) });
+        .softDelete({ id: Number(req.params.id) });
     res.json(deletedUser);
 });
 
