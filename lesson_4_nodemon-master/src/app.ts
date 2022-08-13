@@ -12,8 +12,8 @@ app.use(express.json());
 app.get(
     '/users',
     async (req: Request, res: Response) => {
-        // const users = await getManager().getRepository(User).find({ relations: ['posts'] });
-        // res.json(users);
+        const users = await getManager().getRepository(User).find({ relations: ['posts'] });
+        res.json(users);
 
         // const user = await getManager().getRepository(User).findOne({
         //     where: {
@@ -30,12 +30,12 @@ app.get(
         // res.json(users);
 
         // Інший запит: тільки ті юзерси, які в своїх постах мають такі значення: "..."
-        const users = await getManager().getRepository(User)
-            .createQueryBuilder('user')
-            .leftJoin('Posts', 'posts', 'posts.userId = user.id')
-            .where('posts.text = "Possssst"')
-            .getMany();
-        res.json(users);
+        // const users = await getManager().getRepository(User)
+        //     .createQueryBuilder('user')
+        //     .leftJoin('Posts', 'posts', 'posts.userId = user.id')
+        //     .where('posts.text = "Possssst"')
+        //     .getMany();
+        // res.json(users);
     },
 );
 
