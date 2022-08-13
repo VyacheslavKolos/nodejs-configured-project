@@ -3,17 +3,20 @@ import 'reflect-metadata';
 import express, { Request, Response } from 'express';
 import { createConnection, getManager } from 'typeorm';
 import { User } from './entity/user';
+import {apiRouter} from "./router/apiRouter";
 
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(apiRouter);
+
 app.get(
     '/users',
     async (req: Request, res: Response) => {
-        // const users = await getManager().getRepository(User).find({ relations: ['posts'] });
-        // res.json(users);
+        const users = await getManager().getRepository(User).find({ relations: ['posts'] });
+        res.json(users);
 
         // const user = await getManager().getRepository(User).findOne({
         //     where: {
@@ -30,19 +33,19 @@ app.get(
         // res.json(users);
 
         // Інший запит: тільки ті юзерси, які в своїх постах мають такі значення: "..."
-        const users = await getManager().getRepository(User)
-            .createQueryBuilder('user')
-            .leftJoin('Posts', 'posts', 'posts.userId = user.id')
-            .where('posts.text = "Possssst"')
-            .getMany();
-        res.json(users);
+        // const users = await getManager().getRepository(User)
+        //     .createQueryBuilder('user')
+        //     .leftJoin('Posts', 'posts', 'posts.userId = user.id')
+        //     .where('posts.text = "Possssst"')
+        //     .getMany();
+        // res.json(users);
     },
 );
 
-app.post('/users', async (req, res) => {
-    const createdUser = await getManager().getRepository(User).save(req.body);
-    res.json(createdUser);
-});
+// app.post('/users', async (req, res) => {
+//     const createdUser = await getManager().getRepository(User).save(req.body);
+//     res.json(createdUser);
+// });
 
 app.patch('/users/:id', async (req, res) => {
     const { password, email } = req.body;
