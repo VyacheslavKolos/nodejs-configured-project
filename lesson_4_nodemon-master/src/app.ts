@@ -42,10 +42,10 @@ app.get(
     },
 );
 
-// app.post('/users', async (req, res) => {
-//     const createdUser = await getManager().getRepository(User).save(req.body);
-//     res.json(createdUser);
-// });
+app.post('/users', async (req, res) => {
+    const createdUser = await getManager().getRepository(User).save(req.body);
+    res.json(createdUser);
+});
 
 app.patch('/users/:id', async (req, res) => {
     const { password, email } = req.body;
