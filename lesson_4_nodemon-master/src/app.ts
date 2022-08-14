@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import express, {  } from 'express';
+import express from 'express';
 import { createConnection, getManager } from 'typeorm';
 import { User } from './entity/user';
 import { apiRouter } from './router/apiRouter';

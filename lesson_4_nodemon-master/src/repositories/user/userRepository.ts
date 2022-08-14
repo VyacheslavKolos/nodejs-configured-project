@@ -1,16 +1,15 @@
-import { Request, Response } from 'express';
-import { IUser } from '../entity/user';
-import { userService } from '../services/userService';
+import { EntityRepository, getManager, Repository } from 'typeorm';
+import { IUser, User } from '../../entity/user';
+import { IUserRepository } from './userRepository.interface';
 
-class UserController {
-    public async createUser(req:Request, res:Response):Promise<Response<IUser>> {
-        const createdUser = await userService.createUser(req.body);
-        return res.json(createdUser);
+@EntityRepository(User)
+class UserRepository extends Repository<User> implements IUserRepository {
+    public async createUser(user:IUser):Promise<IUser> {
+        return getManager().getRepository(User).save(user);
     }
 
-    public async getUsers(req:Request, res:Response):Promise<Response<IUser[]>> {
-        const users = await userService.getUsers();
-        return res.json(users);
+    public async getUsers(): Promise<IUser[]> {
+        return getManager().getRepository(User).find({ relations: ['posts'] });
 
         // const user = await getManager().getRepository(User).findOne({
         //     where: {
@@ -36,4 +35,4 @@ class UserController {
     }
 }
 
-export const userController = new UserController();
+export const userRepository = new UserRepository();
