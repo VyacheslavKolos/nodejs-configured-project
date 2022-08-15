@@ -1,6 +1,8 @@
-import { Request, Response } from 'express';
+import { Request, response, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { IUser } from '../entity/user';
 import { userService } from '../services/userService';
+import {UpdateResult} from "typeorm";
 
 class UserController {
     public async createUser(req:Request, res:Response):Promise<Response<IUser>> {
@@ -33,6 +35,23 @@ class UserController {
         //     .where('posts.text = "Possssst"')
         //     .getMany();
         // res.json(users);
+    }
+
+    public async deleteUser(req:Request, res:Response):Promise<any> {
+        try {
+            const { id } = req.params;
+            await userService.deleteUser(+id);
+            return res.send(response.status(StatusCodes.NO_CONTENT));
+        } catch (err) {
+            return res.send(response.status(StatusCodes.BAD_REQUEST));
+        }
+    }
+
+    public async updateUser(req:Request, res:Response):Promise<Response<UpdateResult>> {
+        const { password, email } = req.body;
+        const { id } = req.params;
+        const updatedUser = await userService.updateUser(email, password, +id);
+        return res.json(updatedUser);
     }
 }
 

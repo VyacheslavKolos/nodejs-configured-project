@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
 import express from 'express';
-import { createConnection, getManager } from 'typeorm';
-import { User } from './entity/user';
+import { createConnection } from 'typeorm';
+
 import { apiRouter } from './router/apiRouter';
 
 const app = express();
@@ -47,30 +47,16 @@ app.use(apiRouter);
 //     res.json(createdUser);
 // });
 
-app.patch('/users/:id', async (req, res) => {
-    const { password, email } = req.body;
-    const updatedUser = await getManager()
-        .getRepository(User)
-        .update({ id: Number(req.params.id) }, {
-            password,
-            email,
-        });
-    res.json(updatedUser);
-});
-
-// app.delete('/users/:id', async (req, res) => {
-//     const deletedUser = await getManager()
+// app.patch('/users/:id', async (req, res) => {
+//     const { password, email } = req.body;
+//     const updatedUser = await getManager()
 //         .getRepository(User)
-//         .delete({ id: Number(req.params.id) });
-//     res.json(deletedUser);
+//         .update({ id: Number(req.params.id) }, {
+//             password,
+//             email,
+//         });
+//     res.json(updatedUser);
 // });
-
-app.delete('/users/:id', async (req, res) => {
-    const deletedUser = await getManager()
-        .getRepository(User)
-        .softDelete({ id: Number(req.params.id) });
-    res.json(deletedUser);
-});
 
 app.listen(5500, async () => {
     console.log('Server started on port 5500!!!');
