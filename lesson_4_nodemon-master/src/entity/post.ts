@@ -1,13 +1,15 @@
 import {
-    Column, Entity, JoinColumn, ManyToOne,
+    Column, Entity, JoinColumn, ManyToOne, OneToMany,
 } from 'typeorm';
 import { CommonFields } from './commonFields';
 import { User } from './user';
+import { Comment } from './comment';
 
 export interface IPost{
     title: string;
     text: string;
     userId: number;
+    comments:any[];
 }
 
 @Entity('posts', { database: 'studynode' })
@@ -34,4 +36,7 @@ export class Post extends CommonFields implements IPost {
     @ManyToOne(() => User, (user) => user.posts)
     @JoinColumn({ name: 'userId' })
         user: User;
+
+    @OneToMany(() => Comment, (comment) => comment.post)
+        comments:Comment[];
 }
