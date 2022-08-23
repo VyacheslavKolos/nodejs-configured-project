@@ -3,14 +3,14 @@ import { userController } from '../controller/userController';
 
 const router = Router();
 
-// router.get('/', userController.getUsers);
+router.get('/', userController.getUsers);
 
 router.get('/:email', userController.getUserByEmail);
 
 router.post('/', userController.createUser);
 
-// router.delete('/:id', userController.deleteUser);
-//
-// router.patch('/:id', userController.updateUser);
+router.delete('/:id', userController.deleteUser);
+
+router.patch('/:id', userController.updateUser);
 
 export const userRouter = router;

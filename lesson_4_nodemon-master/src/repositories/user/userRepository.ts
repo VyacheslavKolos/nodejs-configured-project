@@ -1,5 +1,5 @@
 import {
-    EntityRepository, getManager, Repository,
+    EntityRepository, getManager, Repository, UpdateResult,
 } from 'typeorm';
 import { IUser, User } from '../../entity/user';
 import { IUserRepository } from './userRepository.interface';
@@ -10,29 +10,30 @@ class UserRepository extends Repository<User> implements IUserRepository {
         return getManager().getRepository(User).save(user);
     }
 
-    public async getUserByEmail(email:string):Promise<IUser | undefined> {
-        return getManager().getRepository(User).createQueryBuilder('user')
-            .where(`user.email = ${email}`)
-            .andWhere('user.deletedAt IS NULL')
+    public async getUserByEmail(id:string):Promise<IUser | undefined> {
+        return getManager().getRepository(User)
+            .createQueryBuilder('user')
+            .where('user.id = :id', { id })
+            .andWhere('user.deleteAt IS NULL')
             .getOne();
     }
 
-    // public async getUsers(): Promise<IUser[]> {
-    //     return getManager().getRepository(User).find({ relations: ['posts'] });
-    // }
-    //
-    // public async deleteUser(id:number):Promise<void> {
-    //     await getManager().getRepository(User).softDelete(id);
-    // }
-    //
-    // public async updateUser(email:string, password:string, id:number):Promise<UpdateResult> {
-    //     return getManager()
-    //         .getRepository(User)
-    //         .update(id, {
-    //             password,
-    //             email,
-    //         });
-    // }
+    public async getUsers(): Promise<IUser[]> {
+        return getManager().getRepository(User).find({ relations: ['posts'] });
+    }
+
+    public async deleteUser(id:number):Promise<void> {
+        await getManager().getRepository(User).softDelete(id);
+    }
+
+    public async updateUser(email:string, password:string, id:number):Promise<UpdateResult> {
+        return getManager()
+            .getRepository(User)
+            .update(id, {
+                password,
+                email,
+            });
+    }
 }
 
 export const userRepository = new UserRepository();
