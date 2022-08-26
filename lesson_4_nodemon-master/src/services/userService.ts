@@ -1,3 +1,4 @@
+import { UpdateResult } from 'typeorm';
 import { IUser } from '../entity/user';
 import { userRepository } from '../repositories/user/userRepository';
 
@@ -12,8 +13,17 @@ class UserService {
         return users;
     }
 
-    public async getUserByEmail(email:string):Promise<IUser | undefined> {
-        return userRepository.getUserByEmail(email);
+    public async getUserById(id:string):Promise<IUser | undefined > {
+        return userRepository.getUserById(id);
+    }
+
+    public async deleteUser(id:number):Promise<void> {
+        await userRepository.deleteUser(id);
+    }
+
+    public async updateUser(email:string, password:string, id:number):Promise<UpdateResult> {
+        const updatedUser = userRepository.updateUser(email, password, id);
+        return updatedUser;
     }
 }
 

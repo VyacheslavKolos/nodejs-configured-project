@@ -1,5 +1,7 @@
-import { Request, Response } from 'express';
+import { Request, response, Response } from 'express';
 
+import { UpdateResult } from 'typeorm';
+import { StatusCodes } from 'http-status-codes';
 import { IUser } from '../entity/user';
 import { userService } from '../services/userService';
 
@@ -14,10 +16,27 @@ class UserController {
         return res.json(users);
     }
 
-    public async getUserByEmail(req:Request, res:Response):Promise<Response<IUser>> {
-        const { email } = req.params;
-        const user = await userService.getUserByEmail(email);
+    public async getUserById(req:Request, res:Response):Promise<Response<IUser>> {
+        const { id } = req.params;
+        const user = await userService.getUserById(id);
         return res.json(user);
+    }
+
+    public async deleteUser(req:Request, res:Response):Promise<any> {
+        try {
+            const { id } = req.params;
+            await userService.deleteUser(+id);
+            return res.send(response.status(StatusCodes.NO_CONTENT));
+        } catch (err) {
+            return res.send(response.status(StatusCodes.BAD_REQUEST));
+        }
+    }
+
+    public async updateUser(req:Request, res:Response):Promise<Response<UpdateResult>> {
+        const { password, email } = req.body;
+        const { id } = req.params;
+        const updatedUser = await userService.updateUser(email, password, +id);
+        return res.json(updatedUser);
     }
 }
 
