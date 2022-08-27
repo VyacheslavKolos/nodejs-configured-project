@@ -12,8 +12,10 @@ app.use(express.json());
 
 app.use(apiRouter);
 
-app.listen(5500, async () => {
-    console.log('Server started on port 5500!!!');
+const { PORT } = process.env;
+
+app.listen(PORT, async () => {
+    console.log(`Server started on port ${PORT}!!!`);
     try {
         const connection = await createConnection();
         if (connection) {

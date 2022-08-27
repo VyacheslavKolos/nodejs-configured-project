@@ -4,7 +4,7 @@ import { IUser } from '../../entity/user';
 export interface IUserRepository{
     createUser(user:IUser):Promise<IUser>;
     getUsers(): Promise<IUser[]>;
-    getUserById(id:string):Promise<IUser | undefined>
+    getUserByEmail(email:string):Promise<IUser | undefined>
     deleteUser(id:number):Promise<void>;
     updateUser(email:string, password:string, id:number):Promise<UpdateResult>;
 }

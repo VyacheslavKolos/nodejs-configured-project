@@ -36,10 +36,10 @@ class UserRepository extends Repository<User> implements IUserRepository {
         // res.json(users);
     }
 
-    public async getUserById(id:string):Promise<IUser | undefined> {
+    public async getUserByEmail(email:string):Promise<IUser | undefined> {
         return getManager().getRepository(User)
             .createQueryBuilder('user')
-            .where('user.id = :id', { id })
+            .where('user.email = :email', { email })
             .andWhere('user.deleteAt IS NULL')
             .getOne();
     }

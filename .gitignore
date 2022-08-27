@@ -1,2 +1,3 @@
 # Project exclude paths
 /lesson_4_nodemon-master/node_modules/
+.env

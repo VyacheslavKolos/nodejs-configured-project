@@ -19,8 +19,8 @@ class UserService {
         return users;
     }
 
-    public async getUserById(id:string):Promise<IUser | undefined > {
-        return userRepository.getUserById(id);
+    public async getUserByEmail(email:string):Promise<IUser | undefined > {
+        return userRepository.getUserByEmail(email);
     }
 
     public async deleteUser(id:number):Promise<void> {
